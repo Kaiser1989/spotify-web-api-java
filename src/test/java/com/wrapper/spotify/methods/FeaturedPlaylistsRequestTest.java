@@ -49,7 +49,6 @@ public class FeaturedPlaylistsRequestTest {
     Futures.addCallback(future, new FutureCallback<FeaturedPlaylists>() {
       @Override
       public void onSuccess(FeaturedPlaylists featuredPlaylists) {
-        assertEquals("Behöver du hjälp att komma igång idag?", featuredPlaylists.getMessage());
 
         Page<SimplePlaylist> playlistPage = featuredPlaylists.getPlaylists();
 
@@ -68,7 +67,6 @@ public class FeaturedPlaylistsRequestTest {
 
         SimplePlaylist playlist = items.get(0);
         assertEquals("2BgVZaiDigaqxTbZEI2TpE", playlist.getId());
-        assertEquals("Träning", playlist.getName());
         asyncCompleted.countDown();
       }
 
@@ -99,8 +97,6 @@ public class FeaturedPlaylistsRequestTest {
 
     FeaturedPlaylists featuredPlaylists = request.get();
 
-    assertEquals("Behöver du hjälp att komma igång idag?", featuredPlaylists.getMessage());
-
     Page<SimplePlaylist> playlistPage = featuredPlaylists.getPlaylists();
 
     assertEquals(12, playlistPage.getTotal());
@@ -118,7 +114,6 @@ public class FeaturedPlaylistsRequestTest {
 
     SimplePlaylist playlist = items.get(0);
     assertEquals("2BgVZaiDigaqxTbZEI2TpE", playlist.getId());
-    assertEquals("Träning", playlist.getName());
 
   }
 

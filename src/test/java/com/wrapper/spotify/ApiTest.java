@@ -3,7 +3,10 @@ package com.wrapper.spotify;
 import com.wrapper.spotify.UtilProtos.Url.Scheme;
 import com.wrapper.spotify.methods.Request;
 import com.wrapper.spotify.models.AlbumType;
+
+import com.wrapper.spotify.models.PlaylistTrackPosition;
 import net.sf.json.JSONObject;
+
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Test;
 
@@ -14,7 +17,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static com.wrapper.spotify.Assertions.*;
+import static com.wrapper.spotify.Assertions.assertHasBodyParameter;
+import static com.wrapper.spotify.Assertions.assertHasHeader;
+import static com.wrapper.spotify.Assertions.assertHasJsonBody;
+import static com.wrapper.spotify.Assertions.assertHasParameter;
 import static junit.framework.TestCase.assertEquals;
 
 public class ApiTest {
@@ -24,13 +30,6 @@ public class ApiTest {
     Api api = Api.DEFAULT_API;
     Request request = api.getAlbum("5oEljuMoe9MXH6tBIPbd5e").build();
     assertEquals("https://api.spotify.com:443/v1/albums/5oEljuMoe9MXH6tBIPbd5e", request.toString());
-  }
-
-  @Test
-  public void shouldCreateGetAudioFeaturesUrl(){
-    Api api = Api.DEFAULT_API;
-    Request request = api.getAudioFeature("1hmNbafW4sAPNaGc7LeXAZ").build();
-    assertEquals("https://api.spotify.com:443/v1/audio-features/1hmNbafW4sAPNaGc7LeXAZ", request.toString());
   }
 
   @Test
@@ -354,6 +353,33 @@ public class ApiTest {
     assertHasHeader(request.toUrl(), "Content-Type", "application/json");
     assertHasJsonBody(request.toUrl(), "[\"spotify:track:4BYGxv4rxSNcTgT3DsFB9o\",\"spotify:tracks:0BG2iE6McPhmAEKIhfqy1X\"]");
     assertHasParameter(request.toUrl(), "position", String.valueOf(insertIndex));
+    assertHasHeader(request.toUrl(), "Authorization", "Bearer " + accessToken);
+  }
+
+  @Test
+  public void shouldCreateRemoveTrackFromPlaylistUrl() {
+    final String accessToken = "myVeryLongAccessToken";
+    final Api api = Api.builder().accessToken(accessToken).build();
+
+    final String myUsername = "thelinmichael";
+    final String myPlaylistId = "5ieJqeLJjjI8iJWaxeBLuK";
+    final String snapshotId = "JbtmHBDBAYu3/bt8BOXKjzKx3i0b6LCa/wVjyl6qQ2Yf6nFXkbmzuEa+ZI/U1yF+";
+    final String track1Uri = "spotify:track:4BYGxv4rxSNcTgT3DsFB9o";
+    final String track2Uri = "spotify:track:0BG2iE6McPhmAEKIhfqy1X";
+    final int track2Position = 5;
+    PlaylistTrackPosition playlistTrackPosition1 = new PlaylistTrackPosition(track1Uri);
+    PlaylistTrackPosition playlistTrackPosition2 = new PlaylistTrackPosition(track2Uri, new int[]{track2Position});
+    final List<PlaylistTrackPosition> tracksToRemove = Arrays.asList(playlistTrackPosition1, playlistTrackPosition2);
+
+    final String expectedJsonBody = String.format("{\"tracks\":[{\"uri\":\"%s\"},{\"uri\":\"%s\",\"positions\":[%s]}],\"snapshot_id\":\"%s\"}",
+        track1Uri, track2Uri, String.valueOf(track2Position), snapshotId);
+
+    final Request request = api.removeTrackFromPlaylist(myUsername, myPlaylistId, tracksToRemove).snapshotId(snapshotId).build();
+
+    assertEquals("https://api.spotify.com:443/v1/users/thelinmichael/playlists/" + myPlaylistId + "/tracks", request.toString());
+    assertHasHeader(request.toUrl(), "Authorization", "Bearer " + accessToken);
+    assertHasHeader(request.toUrl(), "Content-Type", "application/json");
+    assertHasJsonBody(request.toUrl(), expectedJsonBody);
     assertHasHeader(request.toUrl(), "Authorization", "Bearer " + accessToken);
   }
 
