@@ -31,7 +31,6 @@ public class SpotifyHttpManager implements HttpManager {
     }
   }
 
-  @Override
   public String get(Url url) throws WebApiException, IOException {
     assert (url != null);
 
@@ -48,7 +47,6 @@ public class SpotifyHttpManager implements HttpManager {
     return execute(method);
   }
 
-  @Override
   public String post(UtilProtos.Url url) throws IOException, WebApiException {
     assert (url != null);
 
@@ -76,7 +74,6 @@ public class SpotifyHttpManager implements HttpManager {
     return execute(method);
   }
 
-  @Override
   public String put(UtilProtos.Url url) throws IOException, WebApiException {
     assert (url != null);
 
@@ -104,7 +101,6 @@ public class SpotifyHttpManager implements HttpManager {
     return execute(method);
   }
 
-  @Override
   public String delete(UtilProtos.Url url) throws IOException, WebApiException {
     assert (url != null);
 

@@ -15,6 +15,7 @@ import com.wrapper.spotify.models.Image;
 import com.wrapper.spotify.models.LibraryTrack;
 import com.wrapper.spotify.models.NewReleases;
 import com.wrapper.spotify.models.Page;
+import com.wrapper.spotify.models.PlayingTrack;
 import com.wrapper.spotify.models.Playlist;
 import com.wrapper.spotify.models.PlaylistTrack;
 import com.wrapper.spotify.models.PlaylistTracksInformation;
@@ -716,5 +717,27 @@ public class JsonUtil {
 		returnedContext.setHref(jsonObject.getString("href"));
 		returnedContext.setType(jsonObject.getString("type"));
 		return returnedContext;
+	}
+
+	public static PlayingTrack createPlayingTrack(JSONObject jsonObject) {
+		final PlayingTrack returnedPlayingTrack = new PlayingTrack();	
+		try {
+			returnedPlayingTrack.setTrack(createTrack(jsonObject.getJSONObject("item")));
+		} catch (Exception e){
+			returnedPlayingTrack.setTrack(null);
+		}
+		try{
+			returnedPlayingTrack.setTimestamp(jsonObject.getInt("timestamp"));
+		} catch (Exception e) {
+			returnedPlayingTrack.setTimestamp(null);
+		}
+		try{
+			returnedPlayingTrack.setProgress(jsonObject.getInt("progress_ms"));
+		} catch (Exception e) {
+			returnedPlayingTrack.setProgress(null);
+		}
+		returnedPlayingTrack.setPlaying(jsonObject.getBoolean("is_playing"));
+		returnedPlayingTrack.setContext(createContext(jsonObject.getJSONObject("context")));
+		return returnedPlayingTrack;
 	}
 }

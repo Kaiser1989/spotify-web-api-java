@@ -425,6 +425,42 @@ public class Api {
 	  setDefaults(builder);
 	  return builder;
   }
+  
+  public UserCurrentlyPlayingRequest.Builder getUserCurrentlyPlayingTrack() {
+	  final UserCurrentlyPlayingRequest.Builder builder = UserCurrentlyPlayingRequest.builder();
+	  setDefaults(builder);
+	  return builder;
+  }
+  
+  /**
+   * Only one of either context_uri or uris can be specified. 
+   * If neither is present, calling /play will resume playback. 
+   * If both are present the request will return 400 BAD REQUEST.
+   * @return A builder object that can be used to build a request to play a song
+   */
+  public UserPlayRequest.Builder getUserPlay() {
+	  final UserPlayRequest.Builder builder = UserPlayRequest.builder();
+	  setDefaults(builder);
+	  return builder;
+  }
+  
+  public UserPauseRequest.Builder getUserPause() {
+	  final UserPauseRequest.Builder builder = UserPauseRequest.builder();
+	  setDefaults(builder);
+	  return builder;
+  }
+  
+  public UserSkipToNextRequest.Builder getUserSkipToNext() {
+	  final UserSkipToNextRequest.Builder builder = UserSkipToNextRequest.builder();
+	  setDefaults(builder);
+	  return builder;
+  }
+  
+  public UserSkipToPreviousRequest.Builder getUserSkipToPrevious() {
+	  final UserSkipToPreviousRequest.Builder builder = UserSkipToPreviousRequest.builder();
+	  setDefaults(builder);
+	  return builder;
+  }
 
   /**
    * Get a users Your Music tracks.
