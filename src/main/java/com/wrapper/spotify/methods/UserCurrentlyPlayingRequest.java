@@ -33,13 +33,13 @@ public class UserCurrentlyPlayingRequest extends AbstractRequest {
 	}
 
 	public PlayingTrack get() throws IOException, WebApiException {
-		final String jsonString = getJson();
-		if (jsonString.isEmpty()) {
+		try {
+			final String jsonString = getJson();		
+			JSONObject jsonObject = JSONObject.fromObject(jsonString);
+			return JsonUtil.createPlayingTrack(jsonObject);
+		} catch (EmptyResponseException e) {
 			return new PlayingTrack();
 		}
-		
-		JSONObject jsonObject = JSONObject.fromObject(jsonString);
-		return JsonUtil.createPlayingTrack(jsonObject);
 	}
 
 	public static Builder builder() {
